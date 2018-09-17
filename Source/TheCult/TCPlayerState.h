@@ -24,6 +24,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 ActionPoints = 3;	
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 MaxActionPoints = 3;
+
 	UFUNCTION(BlueprintCallable)
 	void AddActionPoint();
 
@@ -31,10 +34,10 @@ public:
 	void ConsumeActionPoint();
 
 	UFUNCTION(BlueprintCallable)
-	void AddFollower();
+	void AddFollowers(int32 Amount);
 
 	UFUNCTION(BlueprintCallable)
-	void KillFollower();
+	void KillFollowers(int32 Amount);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

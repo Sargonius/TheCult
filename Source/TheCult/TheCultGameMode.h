@@ -23,13 +23,30 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 MaxAP = 3;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float APUpdateRate = 5.0f;
+
 	UFUNCTION()
 	void GiveActionPoints();	
 
 	// Heat Management
 	FTimerHandle UpdateHeatTimer;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float HeatUpdateRate = 10.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float HeatThresholdBeforeRetaliation = 0.5f;
+
 	UFUNCTION()
 	void UpdateHeat();
+
+	FTimerHandle UpdatePopulationTimer;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float PopulationUpdateRate = 20.0f;
+
+	UFUNCTION()
+	void UpdatePopulation();
 	
 };

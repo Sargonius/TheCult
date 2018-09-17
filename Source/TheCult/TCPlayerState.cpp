@@ -23,18 +23,19 @@ void ATCPlayerState::ConsumeActionPoint()
 	UE_LOG(LogTemp, Warning, TEXT("%s: Action point spent."), *GetPlayerName());
 }
 
-void ATCPlayerState::AddFollower()
+void ATCPlayerState::AddFollowers(int32 Amount)
 {
-	Followers++;
-	UE_LOG(LogTemp, Warning, TEXT("%s: New follower joins your cell."), *GetPlayerName());
+	Followers += Amount;
+	UE_LOG(LogTemp, Warning, TEXT("%s: New followers joins your cell: %d"), *GetPlayerName(), Amount);
 }
 
-void ATCPlayerState::KillFollower()
+void ATCPlayerState::KillFollowers(int32 Amount)
 {
 	if (Followers > 0)
 	{
-		Followers--;
-		UE_LOG(LogTemp, Warning, TEXT("%s: A follower died in action."), *GetPlayerName());
+		FMath::Clamp(Amount, 0, Followers);
+		Followers -= Amount;
+		UE_LOG(LogTemp, Warning, TEXT("%s: Followers died in action: %d"), *GetPlayerName(), Amount);
 	}
 }
 

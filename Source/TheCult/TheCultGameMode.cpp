@@ -8,11 +8,13 @@ void ATCGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("GameMode BeginPlay Called, yay!"));
+	UE_LOG(LogTemp, Warning, TEXT("The Game begins."));
 
-	GetWorld()->GetTimerManager().SetTimer(UpdateActionPointsTimer, this, &ATCGameMode::GiveActionPoints, 5.0f, true);
+	GetWorld()->GetTimerManager().SetTimer(UpdateActionPointsTimer, this, &ATCGameMode::GiveActionPoints, APUpdateRate, true);
 
-	GetWorld()->GetTimerManager().SetTimer(UpdateHeatTimer, this, &ATCGameMode::UpdateHeat, 30.0f, true);
+	GetWorld()->GetTimerManager().SetTimer(UpdateHeatTimer, this, &ATCGameMode::UpdateHeat, HeatUpdateRate, true);
+
+	GetWorld()->GetTimerManager().SetTimer(UpdatePopulationTimer, this, &ATCGameMode::UpdatePopulation, PopulationUpdateRate, true);
 }
 
 void ATCGameMode::GiveActionPoints()
@@ -26,6 +28,7 @@ void ATCGameMode::GiveActionPoints()
 			if (TCPlayerState->ActionPoints < MaxAP)
 			{
 				TCPlayerState->AddActionPoint();
+				TCPlayerState->MaxActionPoints = MaxAP;
 			}
 		}
 	}
@@ -37,7 +40,28 @@ void ATCGameMode::UpdateHeat()
 
 	if (GameState)
 	{
-		GameState->DecreaseHeat();
+		if (GameState->Heat > HeatThresholdBeforeRetaliation)
+		{
+			if (FMath::RandBool())
+			{
+				GameState->RaidOnCultists();
+				GameState->DecreaseHeat();
+			}
+		}
+		else 
+		{
+			GameState->DecreaseHeat();
+		}
+	}
+}
+
+void ATCGameMode::UpdatePopulation()
+{
+	ATCGameState* GameState = GetGameState<ATCGameState>();
+
+	if (GameState)
+	{
+		GameState->IncreasePopulation();
 	}
 }
 

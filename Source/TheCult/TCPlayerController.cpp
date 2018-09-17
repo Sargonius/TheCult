@@ -30,9 +30,15 @@ void ATCPlayerController::Server_RecruitFollower_Implementation(ATCPlayerState* 
 	{
 		if (GameState->Survivors > 0 && TCPlayerState->ActionPoints > 0)
 		{
-			GameState->KillSurvivors(1);
+			int32 Recruited = FMath::RandRange(1, TCPlayerState->Followers / 5);
+			GameState->KillSurvivors(Recruited);
 			TCPlayerState->ConsumeActionPoint();
-			TCPlayerState->AddFollower();
+			TCPlayerState->AddFollowers(Recruited);
+
+			if (Recruited > 1)
+			{
+				GameState->IncreaseHeat();
+			}
 		}
 	}
 }
