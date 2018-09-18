@@ -20,6 +20,12 @@ class THECULT_API ATCPlayerController : public APlayerController
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
 	void Server_RecruitFollower(ATCPlayerState* TCPlayerState);
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+	void Server_SetLockdown(bool bIsLockdown);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLockdown(bool bIsLockdown);
 	
 	
 };

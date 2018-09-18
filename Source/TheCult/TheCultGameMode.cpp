@@ -27,7 +27,7 @@ void ATCGameMode::GiveActionPoints()
 		{
 			if (TCPlayerState->ActionPoints < MaxAP)
 			{
-				TCPlayerState->AddActionPoint();
+				TCPlayerState->AddActionPoints(1);
 				TCPlayerState->MaxActionPoints = MaxAP;
 			}
 		}

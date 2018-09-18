@@ -19,7 +19,7 @@ public:
 	ATCGameState();
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	FString CurrentVersion = "0.0.7";
+	FString CurrentVersion = "0.0.9";
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 Survivors = 100000;
@@ -45,9 +45,6 @@ public:
 	// Arrest players
 	// Block 
 
-
-		// Heat
-		// Check on another timer
 	UFUNCTION()
 	void IncreaseHeat();
 
@@ -66,6 +63,16 @@ public:
 
 	UFUNCTION()
 	void AddNews(FString NewsToAdd);
+
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 LockdownPrice = 3;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 RecruitPrice = 1;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 AttackPrice = 2;
 
 	
 };

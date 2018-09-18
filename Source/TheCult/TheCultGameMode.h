@@ -33,7 +33,7 @@ public:
 	FTimerHandle UpdateHeatTimer;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float HeatUpdateRate = 10.0f;
+	float HeatUpdateRate = 5.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float HeatThresholdBeforeRetaliation = 0.5f;

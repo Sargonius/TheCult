@@ -19,6 +19,9 @@ public:
 	ATCPlayerState();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	bool bIsLockdown = false;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 Followers = 1;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
@@ -28,10 +31,10 @@ public:
 	int32 MaxActionPoints = 3;
 
 	UFUNCTION(BlueprintCallable)
-	void AddActionPoint();
+	void AddActionPoints(int32 ActionPointsToAdd);
 
 	UFUNCTION(BlueprintCallable)
-	void ConsumeActionPoint();
+	bool ConsumeActionPoints(int32 ActionPointsToConsume);
 
 	UFUNCTION(BlueprintCallable)
 	void AddFollowers(int32 Amount);

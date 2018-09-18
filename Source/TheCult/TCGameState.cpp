@@ -38,31 +38,36 @@ void ATCGameState::AttackSurvivors(int32 Strength, ATCPlayerState* PlayerState)
 		return;
 	}
 
-	if (PlayerState && PlayerState->ActionPoints > 0)
+	if (PlayerState && PlayerState->ConsumeActionPoints(AttackPrice))
 	{
-		int32 KilledSurvivors = FMath::RandRange(Strength, Strength*3);
-		FMath::Clamp(KilledSurvivors, 0, Survivors);
+		int32 KilledSurvivors = FMath::RandRange(Strength / 4.0f, Strength * 1.5f);
+		KilledSurvivors = FMath::Clamp(KilledSurvivors, 0, Survivors);
 
 		AddNews(FString("The cult attacks again! Survivors killed: " + FString::FromInt(KilledSurvivors)));
 
 		KillSurvivors(KilledSurvivors);
 
 		IncreaseHeat();
-
-		PlayerState->ConsumeActionPoint();
 	}
 }
 
 void ATCGameState::IncreaseHeat()
 {
-	Heat += FMath::RandRange(0.01f, 0.1f);
-	FMath::Clamp(Heat, 0.0f, 1.0f);
+	if (HasAuthority())
+	{
+		Heat += FMath::RandRange(0.01f, 0.1f);
+		Heat = FMath::Clamp(Heat, 0.0f, 1.0f);
+	}
 }
 
 void ATCGameState::DecreaseHeat()
 {
-	Heat -= FMath::RandRange(0.01f, 0.1f);
-	FMath::Clamp(Heat, 0.0f, 1.0f);
+	if (HasAuthority())
+	{
+		Heat -= FMath::RandRange(0.01f, 0.08f);
+		Heat = FMath::Clamp(Heat, 0.0f, 1.0f);
+		UE_LOG(LogTemp, Warning, TEXT("Heat decreased to %f"), Heat);
+	}
 }
 
 void ATCGameState::RaidOnCultists()
@@ -74,7 +79,12 @@ void ATCGameState::RaidOnCultists()
 		ATCPlayerState* TCPlayerState = Cast<ATCPlayerState>(PlayerState);
 		if (TCPlayerState)
 		{
-			float KilledSurvivors = FMath::RandRange(1, TCPlayerState->Followers / 5);
+			if (TCPlayerState->bIsLockdown)
+			{
+				continue;
+			}
+
+			float KilledSurvivors = FMath::RandRange(1, TCPlayerState->Followers / 4);
 			
 			TCPlayerState->KillFollowers(FMath::TruncToInt(KilledSurvivors));
 			TotalCasualities += FMath::TruncToInt(KilledSurvivors);
