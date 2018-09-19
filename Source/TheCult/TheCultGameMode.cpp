@@ -15,6 +15,8 @@ void ATCGameMode::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(UpdateHeatTimer, this, &ATCGameMode::UpdateHeat, HeatUpdateRate, true);
 
 	GetWorld()->GetTimerManager().SetTimer(UpdatePopulationTimer, this, &ATCGameMode::UpdatePopulation, PopulationUpdateRate, true);
+
+	GetWorld()->GetTimerManager().SetTimer(UpdateDayTimer, this, &ATCGameMode::UpdateDay, DayUpdateTimer, true);
 }
 
 void ATCGameMode::GiveActionPoints()
@@ -63,5 +65,27 @@ void ATCGameMode::UpdatePopulation()
 	{
 		GameState->IncreasePopulation();
 	}
+}
+
+void ATCGameMode::UpdateDay()
+{
+	ATCGameState* GameState = GetGameState<ATCGameState>();
+
+	if (GameState)
+	{
+		if (GameState->Survivors > 0)
+		{
+					GameState->CurrentDay++;
+		}
+		else
+		{
+			CalculateEndGameStats();
+		}
+	}
+}
+
+void ATCGameMode::CalculateEndGameStats()
+{
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }
 

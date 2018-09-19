@@ -19,7 +19,7 @@ public:
 	ATCGameState();
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	FString CurrentVersion = "0.0.9";
+	FString CurrentVersion = "0.1.0";
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 Survivors = 100000;
@@ -29,6 +29,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void KillSurvivors(int32 KilledSurvivors);
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	int32 CurrentDay = 1;
 
 
 	

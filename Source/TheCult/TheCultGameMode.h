@@ -48,5 +48,16 @@ public:
 
 	UFUNCTION()
 	void UpdatePopulation();
+
+	FTimerHandle UpdateDayTimer;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float DayUpdateTimer = 10.0f;
+
+	UFUNCTION()
+	void UpdateDay();
+
+	UFUNCTION()
+		void CalculateEndGameStats();
 	
 };

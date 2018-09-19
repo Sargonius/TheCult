@@ -29,6 +29,7 @@ void ATCGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	DOREPLIFETIME(ATCGameState, Survivors);
 	DOREPLIFETIME(ATCGameState, Heat);
 	DOREPLIFETIME(ATCGameState, LastNews);
+	DOREPLIFETIME(ATCGameState, CurrentDay);
 }
 
 void ATCGameState::AttackSurvivors(int32 Strength, ATCPlayerState* PlayerState)
