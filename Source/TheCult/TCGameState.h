@@ -19,7 +19,7 @@ public:
 	ATCGameState();
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	FString CurrentVersion = "0.1.0";
+	FString CurrentVersion = "0.1.1";
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 Survivors = 100000;
@@ -43,10 +43,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AttackSurvivors(int32 Strength, ATCPlayerState* PlayerState);
 
-	// Increase heat
-	// Raid players
-	// Arrest players
-	// Block 
+	UFUNCTION()
+	void IncreasePopulation();
 
 	UFUNCTION()
 	void IncreaseHeat();
@@ -57,9 +55,11 @@ public:
 	UFUNCTION()
 	void RaidOnCultists();
 
+	// Increase heat
+// Raid players
+// Arrest players
+// Block 
 
-	UFUNCTION()
-	void IncreasePopulation();
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Replicated)
 	TArray<FString> LastNews;

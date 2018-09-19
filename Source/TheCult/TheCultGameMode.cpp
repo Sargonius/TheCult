@@ -87,5 +87,7 @@ void ATCGameMode::UpdateDay()
 void ATCGameMode::CalculateEndGameStats()
 {
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+
+
 }
 

@@ -58,6 +58,6 @@ public:
 	void UpdateDay();
 
 	UFUNCTION()
-		void CalculateEndGameStats();
+	void CalculateEndGameStats();
 	
 };
