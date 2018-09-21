@@ -3,10 +3,19 @@
 #include "TheCultGameMode.h"
 #include "TCGameState.h"
 #include "TCPlayerState.h"
+#include "Camp.h"
 
 void ATCGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	auto TCGameState = Cast<ATCGameState>(GameState);
+	if (TCGameState)
+	{
+		FActorSpawnParameters SpawnParameters;
+		TCGameState->Camp = GetWorld()->SpawnActor<ACamp>(SpawnParameters);
+		TCGameState->Camp->Population = Population;
+	}
 
 	UE_LOG(LogTemp, Warning, TEXT("The Game begins."));
 
@@ -17,6 +26,23 @@ void ATCGameMode::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(UpdatePopulationTimer, this, &ATCGameMode::UpdatePopulation, PopulationUpdateRate, true);
 
 	GetWorld()->GetTimerManager().SetTimer(UpdateDayTimer, this, &ATCGameMode::UpdateDay, DayUpdateTimer, true);
+}
+
+void ATCGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	auto TCPlayerState = Cast<ATCPlayerState>(NewPlayer->PlayerState);
+	if (TCPlayerState)
+	{
+		FActorSpawnParameters SpawnParameters;
+		auto NewCamp = GetWorld()->SpawnActor<ACamp>(SpawnParameters);
+		if (NewCamp)
+		{
+			TCPlayerState->Camp = NewCamp;
+			NewCamp->SetOwner(NewPlayer);
+		}
+	}
 }
 
 void ATCGameMode::GiveActionPoints()
@@ -73,7 +99,7 @@ void ATCGameMode::UpdateDay()
 
 	if (GameState)
 	{
-		if (GameState->Survivors > 0)
+		if (GameState->GetCamp()->Population > 0)
 		{
 					GameState->CurrentDay++;
 		}

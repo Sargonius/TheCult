@@ -15,11 +15,19 @@ class THECULT_API ATCPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
-	void Server_AttackSurvivors(ATCPlayerState* TCPlayerState);
+	UFUNCTION(BlueprintCallable)
+	void RecruitFollower();
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
-	void Server_RecruitFollower(ATCPlayerState* TCPlayerState);
+	void Server_RecruitFollower(int32 NumberToRecruit);
+
+	UFUNCTION(BlueprintCallable)
+	void AttackSurvivors();
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+	void Server_AttackSurvivors(int32 NumberToKill);
+
+
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
 	void Server_SetLockdown(bool bIsLockdown);

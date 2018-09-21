@@ -19,15 +19,21 @@ public:
 	ATCPlayerState();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-	bool bIsLockdown = false;
+	class ACamp* Camp;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-	int32 Followers = 1;
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	ACamp* GetCamp();
+
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	//bool bIsLockdown = false;
+
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	//int32 Followers = 1;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 ActionPoints = 3;	
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 MaxActionPoints = 3;
 
 	UFUNCTION(BlueprintCallable)

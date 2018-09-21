@@ -3,50 +3,48 @@
 #include "TCGameState.h"
 #include "TCPlayerState.h"
 #include "UnrealNetwork.h"
+#include "Camp.h"
 
 ATCGameState::ATCGameState()
 {
 	bReplicates = true;
 }
 
+ACamp* ATCGameState::GetCamp()
+{
+	return Camp;
+}
+
 void ATCGameState::KillSurvivors(int32 KilledSurvivors)
 {
-	Survivors -= KilledSurvivors;
+	Camp->Kill(KilledSurvivors);
+	//Survivors -= KilledSurvivors;
 	UE_LOG(LogTemp, Warning, TEXT("Killed %d survivors!"), KilledSurvivors);
 }
 
 void ATCGameState::BeginPlay()
 {
 	Super::BeginPlay();
-
-
 }
 
 void ATCGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ATCGameState, Survivors);
+	DOREPLIFETIME(ATCGameState, Camp);
 	DOREPLIFETIME(ATCGameState, Heat);
 	DOREPLIFETIME(ATCGameState, LastNews);
 	DOREPLIFETIME(ATCGameState, CurrentDay);
 }
 
-void ATCGameState::AttackSurvivors(int32 Strength, ATCPlayerState* PlayerState)
+void ATCGameState::AttackSurvivors(int32 KilledSurvivors, ATCPlayerState* PlayerState)
 {
-	if (!HasAuthority())
-	{
-		return;
-	}
-
 	if (PlayerState && PlayerState->ConsumeActionPoints(AttackPrice))
 	{
-		int32 KilledSurvivors = FMath::RandRange(Strength / 4.0f, Strength * 1.5f);
-		KilledSurvivors = FMath::Clamp(KilledSurvivors, 0, Survivors);
-
 		AddNews(FString("The cult attacks again! Survivors killed: " + FString::FromInt(KilledSurvivors)));
 
-		KillSurvivors(KilledSurvivors);
+		Camp->Kill(KilledSurvivors);
+		//KillSurvivors(KilledSurvivors);
 
 		IncreaseHeat();
 	}
@@ -80,12 +78,12 @@ void ATCGameState::RaidOnCultists()
 		ATCPlayerState* TCPlayerState = Cast<ATCPlayerState>(PlayerState);
 		if (TCPlayerState)
 		{
-			if (TCPlayerState->bIsLockdown)
+			if (TCPlayerState->GetCamp()->bIsLockdown)
 			{
 				continue;
 			}
 
-			float KilledSurvivors = FMath::RandRange(1, TCPlayerState->Followers / 4);
+			float KilledSurvivors = FMath::RandRange(1, TCPlayerState->GetCamp()->Population / 4);
 			
 			TCPlayerState->KillFollowers(FMath::TruncToInt(KilledSurvivors));
 			TotalCasualities += FMath::TruncToInt(KilledSurvivors);
@@ -97,13 +95,13 @@ void ATCGameState::RaidOnCultists()
 
 void ATCGameState::IncreasePopulation()
 {
-	float AdultWomanSurvivors = (Survivors / 100 * 60) / 2;
+	float AdultWomanSurvivors = (GetCamp()->Population / 100 * 60) / 2;
 
 	int32 PopulationIncrease = FMath::TruncToInt(AdultWomanSurvivors / 100 * FMath::RandRange(0.1f, 2.0f));
 
 	AddNews(FString("Population increased: " + FString::FromInt(PopulationIncrease)));
 
-	Survivors += PopulationIncrease;
+	GetCamp()->IncreasePopulation(PopulationIncrease);
 }
 
 void ATCGameState::AddNews(FString NewsToAdd)

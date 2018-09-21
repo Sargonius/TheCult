@@ -3,33 +3,22 @@
 #include "TCPlayerController.h"
 #include "TCPlayerState.h"
 #include "TCGameState.h"
+#include "Camp.h"
 
-
-
-
-void ATCPlayerController::Server_AttackSurvivors_Implementation(ATCPlayerState* TCPlayerState)
+void ATCPlayerController::Server_RecruitFollower_Implementation(int32 NumberToRecruit)
 {
 	ATCGameState* GameState = Cast<ATCGameState>(GetWorld()->GetGameState());
+	ATCPlayerState* TCPlayerState = Cast<ATCPlayerState>(PlayerState);
 
 	if (GameState && TCPlayerState)
 	{
-		GameState->AttackSurvivors(TCPlayerState->Followers, TCPlayerState);
-	}
-}
-
-void ATCPlayerController::Server_RecruitFollower_Implementation(ATCPlayerState* TCPlayerState)
-{
-	ATCGameState* GameState = Cast<ATCGameState>(GetWorld()->GetGameState());
-
-	if (GameState && TCPlayerState)
-	{
-		if (GameState->Survivors > 0 && TCPlayerState->ConsumeActionPoints(GameState->RecruitPrice))
+		if (GameState->GetCamp()->Population > 0 && TCPlayerState->ConsumeActionPoints(GameState->RecruitPrice))
 		{
-			int32 Recruited = FMath::RandRange(1, TCPlayerState->Followers / 5);
-			GameState->KillSurvivors(Recruited);
-			TCPlayerState->AddFollowers(Recruited);
+			GameState->GetCamp()->Kill(NumberToRecruit);
+			TCPlayerState->GetCamp()->IncreasePopulation(NumberToRecruit);
+			//TCPlayerState->AddFollowers(NumberToRecruit);
 
-			if (Recruited > 1)
+			if (NumberToRecruit > 1)
 			{
 				GameState->IncreaseHeat();
 			}
@@ -37,12 +26,52 @@ void ATCPlayerController::Server_RecruitFollower_Implementation(ATCPlayerState* 
 	}
 }
 
+void ATCPlayerController::RecruitFollower()
+{
+	ATCGameState* GameState = Cast<ATCGameState>(GetWorld()->GetGameState());
+	ATCPlayerState* TCPlayerState = Cast<ATCPlayerState>(PlayerState);
+
+	if (GameState && TCPlayerState)
+	{
+		if (GameState->GetCamp()->Population > 0 && TCPlayerState->ConsumeActionPoints(GameState->RecruitPrice))
+		{
+			int32 Recruited = FMath::RandRange(1, TCPlayerState->GetCamp()->Population / 5);
+			GameState->GetCamp()->Kill(Recruited);
+			TCPlayerState->GetCamp()->IncreasePopulation(Recruited);
+
+			if (IsLocalController())
+			{
+				Server_RecruitFollower(Recruited);
+			}
+		}
+	}
+}
+
+void ATCPlayerController::AttackSurvivors()
+{
+	ATCGameState* GameState = Cast<ATCGameState>(GetWorld()->GetGameState());
+	ATCPlayerState* TCPlayerState = Cast<ATCPlayerState>(PlayerState);
+
+	if (GameState && TCPlayerState)
+	{
+		GameState->AttackSurvivors(TCPlayerState->GetCamp()->Population, TCPlayerState);
+	}
+}
+
+void ATCPlayerController::Server_AttackSurvivors_Implementation(int32  NumberToKill)
+{
+	ATCGameState* GameState = Cast<ATCGameState>(GetWorld()->GetGameState());
+
+	if (GameState)
+	{
+		//GameState->AttackSurvivors(NumberToKill);
+	}
+}
+
 void ATCPlayerController::Server_SetLockdown_Implementation(bool bIsLockdown)
 {
 	SetLockdown(bIsLockdown);
 }
-
-
 
 void ATCPlayerController::SetLockdown(bool bIsLockdown)
 {
@@ -54,7 +83,7 @@ void ATCPlayerController::SetLockdown(bool bIsLockdown)
 			{
 				if (TCPlayerState->ConsumeActionPoints(TCGameState->LockdownPrice))
 				{
-					TCPlayerState->bIsLockdown = bIsLockdown;
+					TCPlayerState->GetCamp()->ToggleLockdown();
 				}
 			}
 	}
@@ -68,12 +97,12 @@ void ATCPlayerController::SetLockdown(bool bIsLockdown)
 
 
 // Validation
-bool ATCPlayerController::Server_AttackSurvivors_Validate(ATCPlayerState* TCPlayerState)
+bool ATCPlayerController::Server_AttackSurvivors_Validate(int32 AmountToKill)
 {
 	return true;
 }
 
-bool ATCPlayerController::Server_RecruitFollower_Validate(ATCPlayerState* TCPlayerState)
+bool ATCPlayerController::Server_RecruitFollower_Validate(int32 NumberToRecruit)
 {
 	return true;
 }

@@ -19,10 +19,13 @@ public:
 	ATCGameState();
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	FString CurrentVersion = "0.1.1";
+	FString CurrentVersion = "0.2.0";
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-	int32 Survivors = 100000;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Replicated)
+	class ACamp* Camp;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	ACamp* GetCamp();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float Heat = 0.0f;
@@ -75,7 +78,7 @@ public:
 	int32 RecruitPrice = 1;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int32 AttackPrice = 2;
+	int32 AttackPrice = 1;
 
 	
 };

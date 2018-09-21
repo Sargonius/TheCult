@@ -16,7 +16,12 @@ class THECULT_API ATCGameMode : public AGameMode
 	
 	virtual void BeginPlay() override;
 
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
 public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 Population = 75000;
+
 	// AP Logic
 	FTimerHandle UpdateActionPointsTimer;
 
