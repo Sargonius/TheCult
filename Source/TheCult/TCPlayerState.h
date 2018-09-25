@@ -24,12 +24,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ACamp* GetCamp();
 
-	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-	//bool bIsLockdown = false;
-
-	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
-	//int32 Followers = 1;
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 ActionPoints = 3;	
 

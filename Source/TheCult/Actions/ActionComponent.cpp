@@ -1,16 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ActionComponent.h"
+#include "TCPlayerState.h"
+#include "TCPlayerController.h"
 
-
-// Sets default values for this component's properties
 UActionComponent::UActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-
-// Called when the game starts
 void UActionComponent::BeginPlay()
 {
 	Super::BeginPlay();	
@@ -28,17 +26,20 @@ bool UActionComponent::CanActivate(int32 ActionPoints)
 
 void UActionComponent::ActivateAction()
 {
-	OnActivateAction();
-	ReceiveOnActivate();
-	
-	if (CooldownTime > 0)
+	if (GetPlayerState() && CanActivate(GetPlayerState()->ActionPoints))
 	{
-		GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UActionComponent::ResetCooldown, CooldownTime, false);
-		bIsOnCooldown = true;
+		ActionLogic();
+		ReceiveOnActivate();
+
+		if (CooldownTime > 0)
+		{
+			GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UActionComponent::ResetCooldown, CooldownTime, false);
+			bIsOnCooldown = true;
+		}
 	}
 }
 
-void UActionComponent::OnActivateAction()
+void UActionComponent::ActionLogic()
 {
 
 }
@@ -46,4 +47,19 @@ void UActionComponent::OnActivateAction()
 void UActionComponent::ResetCooldown()
 {
 	bIsOnCooldown = false;
+}
+
+ATCPlayerState* UActionComponent::GetPlayerState()
+{
+	auto TCController = Cast<ATCPlayerController>(GetOwner());
+	if (TCController)
+	{
+		auto TCPlayerState = Cast<ATCPlayerState>(TCController->PlayerState);
+		if (TCPlayerState)
+		{
+			return TCPlayerState;
+		}
+	}
+
+	return nullptr;
 }

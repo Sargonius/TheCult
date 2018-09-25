@@ -7,6 +7,7 @@
 #include "ActionComponent.generated.h"
 
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class THECULT_API UActionComponent : public UActorComponent
 {
@@ -39,8 +40,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ReceiveOnActivate();
 
-	virtual void OnActivateAction();
+	UFUNCTION(BlueprintCallable)
+	virtual void ActionLogic();
 
 	UFUNCTION(BlueprintCallable)
 	void ResetCooldown();	
+
+	UFUNCTION(BlueprintCallable)
+	ATCPlayerState* GetPlayerState();
 };

@@ -39,15 +39,7 @@ void ATCGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 
 void ATCGameState::AttackSurvivors(int32 KilledSurvivors, ATCPlayerState* PlayerState)
 {
-	if (PlayerState && PlayerState->ConsumeActionPoints(AttackPrice))
-	{
-		AddNews(FString("The cult attacks again! Survivors killed: " + FString::FromInt(KilledSurvivors)));
 
-		Camp->Kill(KilledSurvivors);
-		//KillSurvivors(KilledSurvivors);
-
-		IncreaseHeat();
-	}
 }
 
 void ATCGameState::IncreaseHeat()

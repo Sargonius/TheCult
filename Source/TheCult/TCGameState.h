@@ -19,7 +19,7 @@ public:
 	ATCGameState();
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	FString CurrentVersion = "0.2.0";
+	FString CurrentVersion = "0.3.1";
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Replicated)
 	class ACamp* Camp;
