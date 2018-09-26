@@ -9,6 +9,6 @@ public class TheCultEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 
-		ExtraModuleNames.AddRange( new string[] { "TheCult" } );
+		ExtraModuleNames.AddRange( new string[] { "TheCult"} );
 	}
 }
