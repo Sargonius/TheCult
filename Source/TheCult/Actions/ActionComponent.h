@@ -29,13 +29,19 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bIsOnCooldown = false;
 
-	FTimerHandle CooldownTimerHandle;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FText ActionName;
 
+	FTimerHandle CooldownTimerHandle;
+	
 	UFUNCTION(BlueprintCallable)
 	bool CanActivate(int32 ActionPoints);
 
 	UFUNCTION(BlueprintCallable)
 	void ActivateAction();
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateActionWithoutChecks();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ReceiveOnActivate();

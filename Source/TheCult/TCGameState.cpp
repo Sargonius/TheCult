@@ -4,22 +4,18 @@
 #include "TCPlayerState.h"
 #include "UnrealNetwork.h"
 #include "Camp.h"
+#include "Actions/TCActionAttackOnCult.h"
 
 ATCGameState::ATCGameState()
 {
 	bReplicates = true;
+
+	AttackOnCultAction = CreateDefaultSubobject<UTCActionAttackOnCult>("AttackOnCultAction");
 }
 
 ACamp* ATCGameState::GetCamp()
 {
 	return Camp;
-}
-
-void ATCGameState::KillSurvivors(int32 KilledSurvivors)
-{
-	Camp->Kill(KilledSurvivors);
-	//Survivors -= KilledSurvivors;
-	UE_LOG(LogTemp, Warning, TEXT("Killed %d survivors!"), KilledSurvivors);
 }
 
 void ATCGameState::BeginPlay()
@@ -35,11 +31,6 @@ void ATCGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	DOREPLIFETIME(ATCGameState, Heat);
 	DOREPLIFETIME(ATCGameState, LastNews);
 	DOREPLIFETIME(ATCGameState, CurrentDay);
-}
-
-void ATCGameState::AttackSurvivors(int32 KilledSurvivors, ATCPlayerState* PlayerState)
-{
-
 }
 
 void ATCGameState::IncreaseHeat()
@@ -63,26 +54,7 @@ void ATCGameState::DecreaseHeat()
 
 void ATCGameState::RaidOnCultists()
 {
-	int32 TotalCasualities = 0;
-
-	for (auto PlayerState : PlayerArray)
-	{
-		ATCPlayerState* TCPlayerState = Cast<ATCPlayerState>(PlayerState);
-		if (TCPlayerState)
-		{
-			if (TCPlayerState->GetCamp()->bIsLockdown)
-			{
-				continue;
-			}
-
-			float KilledSurvivors = FMath::RandRange(1, TCPlayerState->GetCamp()->Population / 4);
-			
-			TCPlayerState->KillFollowers(FMath::TruncToInt(KilledSurvivors));
-			TotalCasualities += FMath::TruncToInt(KilledSurvivors);
-		}
-	}
-
-	AddNews(FString("Survivors raided a cult hideout! Killed: " + FString::FromInt(TotalCasualities)));
+	AttackOnCultAction->ActivateActionWithoutChecks();
 }
 
 void ATCGameState::IncreasePopulation()
@@ -105,5 +77,3 @@ void ATCGameState::AddNews(FString NewsToAdd)
 		LastNews.RemoveAt(0);
 	}
 }
-
-// Action - has price, handles action logic, checks AP

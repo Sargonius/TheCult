@@ -6,6 +6,7 @@
 #include "GameFramework/GameState.h"
 #include "TCGameState.generated.h"
 
+class UTCActionAttackOnCult;
 /**
  * 
  */
@@ -19,7 +20,7 @@ public:
 	ATCGameState();
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	FString CurrentVersion = "0.3.1";
+	FString CurrentVersion = "0.3.2";
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Replicated)
 	class ACamp* Camp;
@@ -30,9 +31,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	float Heat = 0.0f;
 
-	UFUNCTION(BlueprintCallable)
-	void KillSurvivors(int32 KilledSurvivors);
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
 	int32 CurrentDay = 1;
 
@@ -41,10 +39,6 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	// Server: Kill survivors based on strength
-	UFUNCTION(BlueprintCallable)
-	void AttackSurvivors(int32 Strength, ATCPlayerState* PlayerState);
 
 	UFUNCTION()
 	void IncreasePopulation();
@@ -79,6 +73,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 AttackPrice = 1;
+
+	// Actions
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UTCActionAttackOnCult* AttackOnCultAction;
 
 	
 };

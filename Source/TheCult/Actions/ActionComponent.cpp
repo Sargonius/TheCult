@@ -39,6 +39,18 @@ void UActionComponent::ActivateAction()
 	}
 }
 
+void UActionComponent::ActivateActionWithoutChecks()
+{
+	ActionLogic();
+	ReceiveOnActivate();
+
+	if (CooldownTime > 0)
+	{
+		GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UActionComponent::ResetCooldown, CooldownTime, false);
+		bIsOnCooldown = true;
+	}
+}
+
 void UActionComponent::ActionLogic()
 {
 
