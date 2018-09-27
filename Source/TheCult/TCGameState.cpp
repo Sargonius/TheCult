@@ -5,6 +5,7 @@
 #include "UnrealNetwork.h"
 #include "Camp.h"
 #include "Actions/TCActionAttackOnCult.h"
+#include "TimerManager.h"
 
 ATCGameState::ATCGameState()
 {

@@ -2,6 +2,7 @@
 
 #include "Camp.h"
 #include "UnrealNetwork.h"
+#include "TimerManager.h"
 
 
 // Sets default values

@@ -4,6 +4,8 @@
 #include "TCGameState.h"
 #include "TCPlayerState.h"
 #include "Camp.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 void ATCGameMode::BeginPlay()
 {

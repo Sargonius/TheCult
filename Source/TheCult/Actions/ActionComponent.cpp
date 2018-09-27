@@ -3,6 +3,8 @@
 #include "ActionComponent.h"
 #include "TCPlayerState.h"
 #include "TCPlayerController.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 UActionComponent::UActionComponent()
 {
